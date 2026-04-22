@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Path("/rooms")
@@ -27,16 +29,28 @@ public class RoomResource {
     }
 
     @POST
-    public Response createRoom(Room room, @Context UriInfo uriInfo) {
-        if (room.getId() == null || room.getId().trim().isEmpty()) {
-            room.setId(UUID.randomUUID().toString());
-        }
-        
-        store.getRooms().put(room.getId(), room);
-        
-        URI location = uriInfo.getAbsolutePathBuilder().path(room.getId()).build();
-        return Response.created(location).entity(room).build();
+public Response createRoom(Room room, @Context UriInfo uriInfo) {
+    // Generate ID if not present
+    if (room.getId() == null || room.getId().trim().isEmpty()) {
+        room.setId(UUID.randomUUID().toString());
     }
+    
+    // Check for Duplicates
+    if (store.getRooms().containsKey(room.getId())) {
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("status", 409);
+        errorBody.put("error", "Conflict");
+        errorBody.put("message", "Room with ID " + room.getId() + " already exists.");
+        return Response.status(Response.Status.CONFLICT)
+                .entity(errorBody)
+                .build();
+    }
+    
+    store.getRooms().put(room.getId(), room);
+    
+    URI location = uriInfo.getAbsolutePathBuilder().path(room.getId()).build();
+    return Response.created(location).entity(room).build();
+}
 
     @GET
     @Path("/{roomId}")
