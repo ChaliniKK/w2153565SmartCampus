@@ -65,6 +65,18 @@ public class SensorResource {
         return Response.created(location).entity(sensor).build();
     }
     
+    @GET
+@Path("/{sensorId}")
+public Response getSensor(@PathParam("sensorId") String sensorId) {
+    Sensor sensor = store.getSensors().get(sensorId);
+    if (sensor == null) {
+        return Response.status(Response.Status.NOT_FOUND)
+                .entity("{\"error\":\"Sensor not found\"}")
+                .build();
+    }
+    return Response.ok(sensor).build();
+}
+
     /**
      * Sub-resource locator for SensorReadings.
      */
