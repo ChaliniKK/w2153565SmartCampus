@@ -48,9 +48,10 @@ public class SensorReadingResource {
                     .entity("{\"error\":\"Sensor not found\"}").build();
         }
 
-        if ("MAINTENANCE".equalsIgnoreCase(sensor.getStatus())) {
-            throw new SensorUnavailableException("Sensor " + sensorId + " is in MAINTENANCE and cannot accept readings.");
-        }
+        if ("MAINTENANCE".equalsIgnoreCase(sensor.getStatus()) || 
+    "OFFLINE".equalsIgnoreCase(sensor.getStatus())) {
+    throw new SensorUnavailableException("Sensor " + sensorId + " is in " + sensor.getStatus() + " status and cannot accept readings.");
+}
 
         if (reading.getId() == null || reading.getId().trim().isEmpty()) {
             reading.setId("RDG-" + UUID.randomUUID().toString());
