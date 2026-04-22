@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Represents a physical room on the Smart Campus.
- */
 public class Room {
 
     private String id;       // Unique identifier
     private String name;     // Human-readable name
-    private String building; // Building name (e.g., "Science Block")
+    private String building; // Building name
     private int floor;       // Floor number
     private List<String> sensorIds = new ArrayList<>();
 
