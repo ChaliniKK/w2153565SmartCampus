@@ -52,19 +52,19 @@ mvn clean install
 **1. Discovery Endpoint**
 
 ```bash
-curl -X GET http://localhost:8080/smartcampus/api/v1/
+curl -X GET http://localhost:8080/SmartCampusAPI/api/v1/
 ```
 
 **2. List All Rooms**
 
 ```bash
-curl -X GET http://localhost:8080/smartcampus/api/v1/rooms
+curl -X GET http://localhost:8080/SmartCampusAPI/api/v1/rooms
 ```
 
 **3. Create a Room**
 
 ```bash
-curl -X POST http://localhost:8080/smartcampus/api/v1/rooms \
+curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/rooms \
   -H "Content-Type: application/json" \
   -d '{"name": "Lecture Theatre 1", "building": "Drama and Theatre", "floor": 2}'
 ```
@@ -72,7 +72,7 @@ curl -X POST http://localhost:8080/smartcampus/api/v1/rooms \
 **4. Register a Sensor**
 
 ```bash
-curl -X POST http://localhost:8080/smartcampus/api/v1/sensors \
+curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors \
   -H "Content-Type: application/json" \
   -d '{"type": "CO2", "status": "ACTIVE", "roomId": "LIB-301"}'
 ```
@@ -80,7 +80,7 @@ curl -X POST http://localhost:8080/smartcampus/api/v1/sensors \
 **5. Add a Sensor Reading**
 
 ```bash
-curl -X POST http://localhost:8080/smartcampus/api/v1/sensors/TEMP-001/readings \
+curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors/TEMP-001/readings \
   -H "Content-Type: application/json" \
   -d '{"value": 22.5}'
 ```
