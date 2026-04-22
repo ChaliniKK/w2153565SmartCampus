@@ -10,7 +10,6 @@ import java.util.Map;
 
 /**
  * Root Discovery Endpoint for the API.
- * Provides hypermedia links and API metadata (HATEOAS principle).
  */
 @Path("/")
 public class DiscoveryResource {
