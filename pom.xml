@@ -73,7 +73,7 @@
     </dependencies>
 
     <build>
-        <finalName>smartcampus</finalName>
+        <finalName>SmartCampusAPI</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
