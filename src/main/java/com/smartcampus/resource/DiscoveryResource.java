@@ -11,23 +11,34 @@ import java.util.Map;
 /**
  * Root Discovery Endpoint for the API.
  */
+
 @Path("/")
 public class DiscoveryResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getApiMetadata() {
-        Map<String, Object> metadata = new HashMap<>();
-        metadata.put("api_version", "1.0");
-        metadata.put("description", "Smart Campus Sensor & Room Management API");
-        metadata.put("admin_contact", "admin@smartcampus.westminster.ac.uk");
+        Map<String, Object> response = new HashMap<>();
         
-        Map<String, String> links = new HashMap<>();
-        links.put("rooms", "/api/v1/rooms");
-        links.put("sensors", "/api/v1/sensors");
+        // API Info
+        Map<String, Object> info = new HashMap<>();
+        info.put("version", "1.0.0");
+        info.put("name", "Smart Campus API");
+        info.put("description", "RESTful API for managing campus rooms and sensors");
         
-        metadata.put("_links", links);
+        // Contact
+        Map<String, String> contact = new HashMap<>();
+        contact.put("email", "chalini.20241143@iit.ac.lk");
+        
+        // Endpoints
+        Map<String, String> endpoints = new HashMap<>();
+        endpoints.put("rooms", "/api/v1/rooms");
+        endpoints.put("sensors", "/api/v1/sensors");
+        
+        response.put("info", info);
+        response.put("contact", contact);
+        response.put("endpoints", endpoints);
 
-        return Response.ok(metadata).build();
+        return Response.ok(response).build();
     }
 }
