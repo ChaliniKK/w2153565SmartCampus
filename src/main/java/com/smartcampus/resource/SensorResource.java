@@ -58,7 +58,7 @@ public class SensorResource {
         store.getSensors().put(sensor.getId(), sensor);
         room.getSensorIds().add(sensor.getId());
         
-        // Initialize an empty reading list for this sensor
+        // Initialize an empty reading list
         store.getSensorReadings().put(sensor.getId(), new ArrayList<>());
 
         URI location = uriInfo.getAbsolutePathBuilder().path(sensor.getId()).build();
@@ -67,7 +67,6 @@ public class SensorResource {
     
     /**
      * Sub-resource locator for SensorReadings.
-     * Part 4 functionality.
      */
     @Path("/{sensorId}/readings")
     public SensorReadingResource getSensorReadingResource(@PathParam("sensorId") String sensorId) {
