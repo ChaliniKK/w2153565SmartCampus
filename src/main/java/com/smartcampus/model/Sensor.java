@@ -2,14 +2,13 @@ package com.smartcampus.model;
 
 /**
  * Represents a sensor deployed in a room on the Smart Campus.
- * Status values: "ACTIVE", "MAINTENANCE", "OFFLINE"
  */
 public class Sensor {
 
-    private String id;           // Unique identifier, e.g., "TEMP-001"
-    private String type;         // Category, e.g., "Temperature", "Occupancy", "CO2"
+    private String id;           // Unique identifier
+    private String type;         // Category
     private String status;       // Current state: "ACTIVE", "MAINTENANCE", or "OFFLINE"
-    private double currentValue; // The most recent measurement recorded
+    private double currentValue; // Recording the most recent measurement
     private String roomId;       // Foreign key linking to the Room where the sensor is located
 
     public Sensor() {}
