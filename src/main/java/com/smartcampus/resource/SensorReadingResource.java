@@ -16,7 +16,6 @@ import java.util.UUID;
 
 /**
  * Sub-resource handling readings for a specific sensor.
- * Not mapped with a root @Path; it is instantiated by SensorResource.
  */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -61,7 +60,6 @@ public class SensorReadingResource {
             reading.setTimestamp(System.currentTimeMillis());
         }
 
-        // Side Effect: Update the Sensor's currentValue
         sensor.setCurrentValue(reading.getValue());
 
         store.getSensorReadings().get(sensorId).add(reading);
