@@ -18,7 +18,7 @@ public class LinkedResourceNotFoundExceptionMapper implements ExceptionMapper<Li
         errorBody.put("error", "Unprocessable Entity");
         errorBody.put("message", exception.getMessage());
 
-        return Response.status(422) // JAX-RS Response.Status doesn't natively include 422 in standard API, use int
+        return Response.status(422)
                 .entity(errorBody)
                 .build();
     }
