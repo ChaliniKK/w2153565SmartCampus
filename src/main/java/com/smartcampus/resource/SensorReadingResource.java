@@ -52,6 +52,12 @@ public class SensorReadingResource {
     "OFFLINE".equalsIgnoreCase(sensor.getStatus())) {
     throw new SensorUnavailableException("Sensor " + sensorId + " is in " + sensor.getStatus() + " status and cannot accept readings.");
 }
+        if (!"ACTIVE".equalsIgnoreCase(sensor.getStatus())) {
+    throw new SensorUnavailableException(
+        "Sensor " + sensorId + " is in " + sensor.getStatus() + 
+        " status and cannot accept readings. Only ACTIVE sensors can record data."
+    );
+}
 
         if (reading.getId() == null || reading.getId().trim().isEmpty()) {
             reading.setId("RDG-" + UUID.randomUUID().toString());
