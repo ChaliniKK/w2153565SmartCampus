@@ -13,7 +13,9 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,7 +49,18 @@ public class SensorResource {
             throw new LinkedResourceNotFoundException("Room with ID " + roomId + " does not exist.");
         }
 
-        if (sensor.getId() == null || sensor.getId().trim().isEmpty()) {
+        // Check for duplicate sensor ID
+        if (sensor.getId() != null && !sensor.getId().trim().isEmpty()) {
+            if (store.getSensors().containsKey(sensor.getId())) {
+                Map<String, Object> errorBody = new HashMap<>();
+                errorBody.put("status", 409);
+                errorBody.put("error", "Conflict");
+                errorBody.put("message", "Sensor with ID " + sensor.getId() + " already exists.");
+                return Response.status(Response.Status.CONFLICT)
+                        .entity(errorBody)
+                        .build();
+            }
+        } else {
             sensor.setId("SENS-" + UUID.randomUUID().toString().substring(0, 8));
         }
         
@@ -66,16 +79,77 @@ public class SensorResource {
     }
     
     @GET
-@Path("/{sensorId}")
-public Response getSensor(@PathParam("sensorId") String sensorId) {
-    Sensor sensor = store.getSensors().get(sensorId);
-    if (sensor == null) {
-        return Response.status(Response.Status.NOT_FOUND)
-                .entity("{\"error\":\"Sensor not found\"}")
-                .build();
+    @Path("/{sensorId}")
+    public Response getSensor(@PathParam("sensorId") String sensorId) {
+        Sensor sensor = store.getSensors().get(sensorId);
+        if (sensor == null) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Sensor with ID " + sensorId + " not found");
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(error)
+                    .build();
+        }
+        return Response.ok(sensor).build();
     }
-    return Response.ok(sensor).build();
-}
+
+    @PUT
+    @Path("/{sensorId}")
+    public Response updateSensor(@PathParam("sensorId") String sensorId, Sensor updatedSensor) {
+        Sensor existingSensor = store.getSensors().get(sensorId);
+        
+        // Check if sensor exists
+        if (existingSensor == null) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Sensor with ID " + sensorId + " not found");
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(error)
+                    .build();
+        }
+        
+        // Validate room exists if roomId is being changed
+        String newRoomId = updatedSensor.getRoomId();
+        if (newRoomId != null && !newRoomId.trim().isEmpty()) {
+            Room room = store.getRooms().get(newRoomId);
+            if (room == null) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Room with ID " + newRoomId + " does not exist");
+                return Response.status(422) // Unprocessable Entity
+                        .entity(error)
+                        .build();
+            }
+            
+            // If room changed, update both rooms' sensor lists
+            String oldRoomId = existingSensor.getRoomId();
+            if (!newRoomId.equals(oldRoomId)) {
+                // Remove from old room
+                Room oldRoom = store.getRooms().get(oldRoomId);
+                if (oldRoom != null) {
+                    oldRoom.getSensorIds().remove(sensorId);
+                }
+                // Add to new room
+                room.getSensorIds().add(sensorId);
+            }
+        }
+        
+        // Update fields (only update non-null fields from request)
+        if (updatedSensor.getType() != null) {
+            existingSensor.setType(updatedSensor.getType());
+        }
+        if (updatedSensor.getStatus() != null) {
+            existingSensor.setStatus(updatedSensor.getStatus());
+        }
+        if (updatedSensor.getCurrentValue() != 0) {
+            existingSensor.setCurrentValue(updatedSensor.getCurrentValue());
+        }
+        if (updatedSensor.getRoomId() != null && !updatedSensor.getRoomId().trim().isEmpty()) {
+            existingSensor.setRoomId(updatedSensor.getRoomId());
+        }
+        
+        // Save back to store
+        store.getSensors().put(sensorId, existingSensor);
+        
+        return Response.ok(existingSensor).build();
+    }
 
     /**
      * Sub-resource locator for SensorReadings.
