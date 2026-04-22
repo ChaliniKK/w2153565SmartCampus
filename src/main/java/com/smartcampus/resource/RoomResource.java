@@ -28,8 +28,9 @@ public class RoomResource {
 
     @POST
     public Response createRoom(Room room, @Context UriInfo uriInfo) {
+        // Generate ID if not present
         if (room.getId() == null || room.getId().trim().isEmpty()) {
-            room.setId("ROOM-" + UUID.randomUUID().toString().substring(0, 8));
+            room.setId(UUID.randomUUID().toString());
         }
         
         store.getRooms().put(room.getId(), room);
@@ -44,7 +45,8 @@ public class RoomResource {
         Room room = store.getRooms().get(roomId);
         if (room == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\":\"Room not found\"}").build();
+                    .entity("{\"error\":\"Room not found\"}")
+                    .build();
         }
         return Response.ok(room).build();
     }
@@ -59,8 +61,8 @@ public class RoomResource {
             return Response.noContent().build();
         }
         
-        // Safety logic: Cannot delete room if sensors are assigned
-        if (!room.getSensorIds().isEmpty()) {
+        // Business logic: Cannot delete room if it has active sensors
+        if (room.hasSensors()) {
             throw new RoomNotEmptyException("Room " + roomId + " cannot be deleted as it still has sensors assigned.");
         }
         

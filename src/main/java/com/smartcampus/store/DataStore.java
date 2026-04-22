@@ -24,7 +24,8 @@ public class DataStore {
 
     private DataStore() {
         // Optional: Pre-populate with some initial dummy data for easy testing
-        Room r1 = new Room("LIB-301", "Library Quiet Study", 50);
+        Room r1 = new Room("Library Quiet Study", "Library", 3);
+        r1.setId("LIB-301"); // Force ID so sensors dummy data maps correctly
         rooms.put(r1.getId(), r1);
         
         Sensor s1 = new Sensor("TEMP-001", "Temperature", "ACTIVE", 21.5, "LIB-301");
