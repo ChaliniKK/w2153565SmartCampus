@@ -28,7 +28,6 @@ public class RoomResource {
 
     @POST
     public Response createRoom(Room room, @Context UriInfo uriInfo) {
-        // Generate ID if not present
         if (room.getId() == null || room.getId().trim().isEmpty()) {
             room.setId(UUID.randomUUID().toString());
         }
@@ -56,12 +55,10 @@ public class RoomResource {
     public Response deleteRoom(@PathParam("roomId") String roomId) {
         Room room = store.getRooms().get(roomId);
         
-        // If room doesn't exist, deleting it is idempotent and safe
         if (room == null) {
             return Response.noContent().build();
         }
         
-        // Business logic: Cannot delete room if it has active sensors
         if (room.hasSensors()) {
             throw new RoomNotEmptyException("Room " + roomId + " cannot be deleted as it still has sensors assigned.");
         }
