@@ -8,42 +8,59 @@ This project is a RESTful API for managing rooms, sensors, and sensor readings w
 
 ---
 
+## 🏗️ API Design Overview
+
+The Smart Campus API is designed following RESTful principles, providing endpoints for managing spatial entities (Rooms) and IoT devices (Sensors).
+Key design decisions include:
+- **Resource Naming**: Plural nouns for collections (`/rooms`, `/sensors`).
+- **Standard HTTP Methods**: `GET` for retrieval, `POST` for creation, `DELETE` for removal.
+- **Hierarchical Structure**: Utilizing Sub-Resource Locators to represent relationships, e.g., `/sensors/{id}/readings`.
+- **Content Negotiation**: Uses JSON (`application/json`) for all requests and responses.
+- **Statelessness**: A singleton `DataStore` mimics database persistence in memory, ensuring thread-safety and consistent state across requests without relying on server sessions.
+- **Clear Status Codes**: Explicit use of standard HTTP status codes like `200 OK`, `201 Created`, `204 No Content`, `404 Not Found`, and `422 Unprocessable Entity` to communicate outcomes effectively.
+
+---
+
 ## 🛠️ Tech Stack
 
 - **Language**: Java 11
 - **Framework**: JAX-RS (Jersey 2.41)
 - **JSON Processing**: Jackson
-- **Server**: Apache Tomcat / Lightweight Servlet Container
+- **Server**: Apache Tomcat (via NetBeans) / Eclipse Jetty (via Maven)
 - **Build Tool**: Maven
 
 ---
 
 ## 🚀 Build & Run Instructions
 
-### 1. Prerequisites
+You can run this project using two distinct methods: through the NetBeans IDE or directly via the command line using Maven and Jetty. 
+
+### Prerequisites
 
 - Java JDK 11 or higher installed
-- Apache Maven installed
-- Apache Tomcat (version 9 or 10 depending on the `javax` namespace usage)
+- Apache Maven installed (if running via command line)
+- NetBeans IDE configured with Apache Tomcat (if running via IDE)
 
-### 2. Build the Application
+### Option 1: Running via Command Line (Maven + Jetty)
 
-Clone the repository and run Maven to build the `war` file:
+1. Clone the repository and navigate to the project root:
+   ```bash
+   git clone https://github.com/ChaliniKK/w2153565SmartCampus.git
+   cd w2153565SmartCampus
+   ```
+2. Run the application using the Jetty Maven plugin:
+   ```bash
+   mvn jetty:run
+   ```
+3. The server will start, and the API will be accessible at: `http://localhost:8080/api/v1/`
 
-```bash
-git clone https://github.com/ChaliniKK/w2153565SmartCampus.git
-cd w2153565SmartCampus
-mvn clean install
-```
+### Option 2: Running via NetBeans IDE (Tomcat)
 
-### 3. Deploy to Tomcat
-
-- Copy the generated `target/smartcampus.war` file.
-- Paste it into the `webapps` directory of your Apache Tomcat installation.
-- Start Tomcat:
-  - **Windows**: `bin\startup.bat`
-  - **Mac/Linux**: `sh bin/startup.sh`
-- The API will be accessible at: `http://localhost:8080/smartcampus/api/v1/`
+1. Open NetBeans IDE.
+2. Select **File > Open Project** and choose the cloned `w2153565SmartCampus` directory.
+3. In the Projects window, right-click the project node and select **Run**.
+4. NetBeans will automatically build the project, deploy the application to its configured Tomcat server, and start the API.
+5. The API will be accessible at: `http://localhost:8080/api/v1/`
 
 ---
 
@@ -52,19 +69,19 @@ mvn clean install
 **1. Discovery Endpoint**
 
 ```bash
-curl -X GET http://localhost:8080/SmartCampusAPI/api/v1/
+curl -X GET http://localhost:8080/api/v1/
 ```
 
 **2. List All Rooms**
 
 ```bash
-curl -X GET http://localhost:8080/SmartCampusAPI/api/v1/rooms
+curl -X GET http://localhost:8080/api/v1/rooms
 ```
 
 **3. Create a Room**
 
 ```bash
-curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/rooms \
+curl -X POST http://localhost:8080/api/v1/rooms \
   -H "Content-Type: application/json" \
   -d '{"name": "Lecture Theatre 1", "building": "Drama and Theatre", "floor": 2}'
 ```
@@ -72,7 +89,7 @@ curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/rooms \
 **4. Register a Sensor**
 
 ```bash
-curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors \
+curl -X POST http://localhost:8080/api/v1/sensors \
   -H "Content-Type: application/json" \
   -d '{"type": "CO2", "status": "ACTIVE", "roomId": "LIB-301"}'
 ```
@@ -80,7 +97,7 @@ curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors \
 **5. Add a Sensor Reading**
 
 ```bash
-curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors/TEMP-001/readings \
+curl -X POST http://localhost:8080/api/v1/sensors/TEMP-001/readings \
   -H "Content-Type: application/json" \
   -d '{"value": 22.5}'
 ```
