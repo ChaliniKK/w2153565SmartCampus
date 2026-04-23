@@ -24,16 +24,6 @@ public class DataStore {
 
     private DataStore() {
         // Pre-populate with some initial dummy data for easy testing
-        Room r1 = new Room("Library Quiet Study", "Library", 3);
-        r1.setId("LIB-301"); 
-        rooms.put(r1.getId(), r1);
-        
-        Sensor s1 = new Sensor("TEMP-001", "Temperature", "ACTIVE", 21.5, "LIB-301");
-        sensors.put(s1.getId(), s1);
-        r1.getSensorIds().add(s1.getId());
-        
-        sensorReadings.put(s1.getId(), new ArrayList<>());
-        sensorReadings.get(s1.getId()).add(new SensorReading("rdg-1", System.currentTimeMillis(), 21.5));
     }
 
     public static DataStore getInstance() {
