@@ -151,6 +151,33 @@ public class SensorResource {
         return Response.ok(existingSensor).build();
     }
 
+    @DELETE
+    @Path("/{sensorId}")
+    public Response deleteSensor(@PathParam("sensorId") String sensorId) {
+        Sensor sensor = store.getSensors().get(sensorId);
+        
+        if (sensor == null) {
+            return Response.noContent().build();
+        }
+        
+        // Remove from the associated room
+        String roomId = sensor.getRoomId();
+        if (roomId != null) {
+            Room room = store.getRooms().get(roomId);
+            if (room != null) {
+                room.getSensorIds().remove(sensorId);
+            }
+        }
+        
+        // Remove associated readings
+        store.getSensorReadings().remove(sensorId);
+        
+        // Remove the sensor itself
+        store.getSensors().remove(sensorId);
+        
+        return Response.noContent().build();
+    }
+
     /**
      * Sub-resource locator for SensorReadings.
      */
