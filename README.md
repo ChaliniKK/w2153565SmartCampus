@@ -2,13 +2,9 @@
 
 This project is a RESTful API for managing rooms, sensors, and sensor readings within a Smart Campus environment, built using **JAX-RS (Jersey)** and deployed on **Apache Tomcat**.
 
-## 🎥 Video Demonstration
-
-> **[Video Demonstration Link]** - _(The link to the 10-minute Postman demo is provided in the Blackboard submission as per requirements)_
-
 ---
 
-## 🏗️ API Design Overview
+## API Design Overview
 
 The Smart Campus API is designed following RESTful principles, providing endpoints for managing spatial entities (Rooms) and IoT devices (Sensors).
 Key design decisions include:
@@ -21,7 +17,7 @@ Key design decisions include:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Language**: Java 11
 - **Framework**: JAX-RS (Jersey 2.41)
@@ -31,7 +27,7 @@ Key design decisions include:
 
 ---
 
-## 🚀 Build & Run Instructions
+## Build & Run Instructions
 
 You can run this project using two distinct methods: through the NetBeans IDE or directly via the command line using Maven and Jetty. 
 
@@ -64,7 +60,7 @@ You can run this project using two distinct methods: through the NetBeans IDE or
 
 ---
 
-## 💻 Sample cURL Commands (Postman Alternative)
+## Sample cURL Commands (Postman Alternative)
 
 **1. Discovery Endpoint**
 
@@ -104,7 +100,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-001/readings \
 
 ---
 
-## 📝 Conceptual Report (Coursework Questions)
+## Conceptual Report 
 
 ### Part 1.1: JAX-RS Resource lifecycle
 
